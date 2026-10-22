@@ -1,0 +1,31 @@
+name: release
+
+# Publishes to npm when a GitHub release is published, using npm trusted
+# publishing (OIDC) with provenance: no npm token is stored in the repo.
+# npm only allows trusted publishing for an existing package, so publish
+# 0.1.0 once by hand (`npm publish`), then configure it on npmjs.com:
+# package @geekflare/ai-sdk -> Settings ->
+# Trusted publishing -> GitHub Actions: owner "geekflare",
+# repository "geekflare-ai-sdk", workflow "release.yml".
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npm publish --access public --provenance

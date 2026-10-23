@@ -1,0 +1,20 @@
+# Monthly dependency update PRs. Related updates are grouped to keep the PR count low.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      ai-sdk:
+        patterns: ["ai", "@ai-sdk/*", "zod"]
+      dev:
+        dependency-type: development
+        exclude-patterns: ["ai", "@ai-sdk/*", "zod"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
